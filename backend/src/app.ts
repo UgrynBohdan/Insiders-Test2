@@ -6,6 +6,7 @@ import loggerMiddleware from "./middlewares/logger"
 import authRouter from "./routes/auth.routes"
 import tripsRouter from './routes/trips.routes'
 import authMiddleware from './middlewares/auth'
+import placesRouter from './routes/places.routes'
 
 const app = express()
 app.use(express.json())

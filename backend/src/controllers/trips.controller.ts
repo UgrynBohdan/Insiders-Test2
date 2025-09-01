@@ -46,3 +46,21 @@ export async function getUserTrips(req: Request, res: Response, next: NextFuncti
         next(err)
     }
 }
+
+export async function getDetails(req: Request, res: Response, next: NextFunction) {
+    try {
+        const { tripId } = req.params
+        const trip = await Trip.findOne({ _id: tripId })        
+
+        if (!trip) {
+            res.status(404).json({ message: 'Trip not found!' })
+            return
+        }
+        
+        const tripInfo = await trip.populate('places')
+        res.json({ tripInfo })
+
+    } catch (err) {
+        next(err)
+    }
+}
