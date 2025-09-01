@@ -5,7 +5,7 @@ import { IUser } from "../db/models/User"
 
 function hasRight (trip: ITrip, user: IUser) {
     // Перевіряємо, чи користувач є власником
-    if (!trip.owner === user.id) {
+    if (!(trip.owner === user.id)) {
         // Перевіряємо, чи користувач є учасником
         const isParticipant = trip.collaborators.some(collaboratorId => collaboratorId === user.id)
         if (!isParticipant) {
@@ -21,6 +21,7 @@ export async function createPlace(req: Request, res: Response, next: NextFunctio
         const { tripId } = req.params
         const user = (req as any).user
         const trip = await Trip.findById(tripId)
+        
 
         if (dayNumber < 1) {
             res.status(401).json({ message: 'dayNumber must be greater than 1!' })
@@ -40,6 +41,9 @@ export async function createPlace(req: Request, res: Response, next: NextFunctio
 
         const newPlace = new Place({ tripId, locationName, notes, dayNumber })
         await newPlace.save()
+
+        trip.places.push(newPlace._id as any)
+        await trip.save()
 
         res.status(201).json({ message: 'Creating successful', newPlace })
         

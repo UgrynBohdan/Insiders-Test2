@@ -8,11 +8,12 @@ const tripsRouter = Router()
 
 tripsRouter.post('/', authMiddleware, tripsController.createNewTrip)
 tripsRouter.get('/', authMiddleware, tripsController.getUserTrips)
+tripsRouter.get('/invite/accept', acceptInvite) // Прийняття запрошень
 tripsRouter.get('/:tripId', authMiddleware, tripsController.getDetails)
 
-tripsRouter.post('/:tripId/access', authMiddleware, invite)
-tripsRouter.get("/invite/accept", acceptInvite)
+tripsRouter.use('/:tripId/places', authMiddleware, placesRouter) // Доступ до місць
 
-tripsRouter.use('/:tripId/places', authMiddleware, placesRouter)
+tripsRouter.post('/:tripId/access', authMiddleware, invite) // Запросити когось
+
 
 export default tripsRouter
