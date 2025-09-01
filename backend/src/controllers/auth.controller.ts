@@ -1,11 +1,10 @@
 import { NextFunction, Request, Response } from 'express'
 import bcrypt from 'bcrypt'
-import { connectDB } from '../db/db'
 import User from '../db/models/User'
 import { CustomError } from '../middlewares/error'
 import jwt from 'jsonwebtoken'
 
-const SECRET_KEY = process.env.SECRET_KEY as string
+const JWT_SECRET = process.env.JWT_SECRET as string
 
 export async function register(req: Request, res: Response, next: NextFunction) {
     try {
@@ -23,7 +22,7 @@ export async function register(req: Request, res: Response, next: NextFunction) 
         
         await newUser.save()
 
-        res.status(201).json(newUser)
+        res.status(201).json({ message: 'User created!' })
     } catch (error) {
         next(error)
     }
@@ -46,7 +45,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
         throw err
     }
     
-    const token = jwt.sign({ id: user._id, name: user.name, role: user.role }, SECRET_KEY, { expiresIn: '1h' });
+    const token = jwt.sign({ id: user._id, name: user.name, role: user.role }, JWT_SECRET, { expiresIn: '1h' });
 
     res.cookie('token', token, { httpOnly: true, secure: true, maxAge: 60 * 60 * 1000 })
     res.status(200).json({ message: 'Login senseful!' });
