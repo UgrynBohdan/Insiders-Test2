@@ -60,3 +60,56 @@ export async function getDetails(req: Request, res: Response, next: NextFunction
         next(err)
     }
 }
+
+export async function deleteTrip(req: Request, res: Response, next: NextFunction) {
+    try {
+        const { tripId } = req.params
+        const trip = await Trip.findOne({ _id: tripId })        
+
+        if (!trip) {
+            res.status(404).json({ message: 'Trip not found!' })
+            return
+        }
+
+        // Видалення подорожі
+        await Trip.findByIdAndDelete(tripId)
+        
+        // Видалення посилання на цю подорож у користувача
+        await User.findByIdAndUpdate(trip.owner, {
+            $pull: { trips: tripId }
+        })
+
+        res.json({ message: 'Deleting successful' })
+
+    } catch (err) {
+        next(err)
+    }
+}
+
+export async function updateTrip(req: Request, res: Response, next: NextFunction) {
+    try {
+        const { tripId } = req.params
+        const trip = await Trip.findOne({ _id: tripId })        
+
+        if (!trip) {
+            res.status(404).json({ message: 'Trip not found!' })
+            return
+        }
+
+        const { title, description, startDate, endDate } = req.body
+        const updatedTrip = await Trip.findByIdAndUpdate(
+            tripId,
+            { title, description, startDate, endDate },
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedTrip) {
+            return res.status(404).json({ message: 'Trip not found!' });
+        }
+
+        res.status(200).json(updatedTrip)
+
+    } catch (err) {
+        next(err)
+    }
+}

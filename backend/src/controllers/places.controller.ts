@@ -54,8 +54,74 @@ export async function createPlace(req: Request, res: Response, next: NextFunctio
 
 export async function deletePlace(req: Request, res: Response, next: NextFunction) {
     try {
-        const { placeId } = req.body
-        
+        const { tripId, placeId } = req.params
+        const user = (req as any).user
+
+        // Знаходимо поїздку
+        const trip = await Trip.findById(tripId)
+        if (!trip) {
+            return res.status(404).json({ message: "Trip not found." })
+        }
+
+        // Перевірка прав доступу
+        if (!hasRight(trip, user)) {
+            return res.status(403).json({ message: "You do not have access to this trip." })
+        }
+
+        // Знаходимо місце
+        const place = await Place.findOne({ _id: placeId, tripId })
+        if (!place) {
+            return res.status(404).json({ message: "Place not found." })
+        }
+
+        // Видаляємо місце
+        await place.deleteOne()
+
+        // Прибираємо з Trip.places
+        trip.places = trip.places.filter(id => id.toString() !== placeId)
+        await trip.save()
+
+        return res.status(200).json({ message: "Place deleted successfully." })
+    } catch (err) {
+        next(err)
+    }
+}
+
+export async function updatePlace(req: Request, res: Response, next: NextFunction) {
+    try {
+        const { tripId, placeId } = req.params
+        const { locationName, notes, dayNumber } = req.body
+        const user = (req as any).user
+
+        const trip = await Trip.findById(tripId)
+        if (!trip) {
+            return res.status(404).json({ message: "Trip not found." })
+        }
+
+        // Перевірка прав доступу
+        if (!hasRight(trip, user)) {
+            return res.status(403).json({ message: "You do not have access to this trip." })
+        }
+
+        // Знаходимо місце
+        const place = await Place.findOne({ _id: placeId, tripId })
+        if (!place) {
+            return res.status(404).json({ message: "Place not found." })
+        }
+
+        // Валідація dayNumber
+        if (dayNumber && dayNumber < 1) {
+            return res.status(400).json({ message: "dayNumber must be greater than or equal to 1." })
+        }
+
+        // Оновлюємо поля
+        if (locationName !== undefined) place.locationName = locationName
+        if (notes !== undefined) place.notes = notes
+        if (dayNumber !== undefined) place.dayNumber = dayNumber
+
+        await place.save()
+
+        return res.status(200).json({ message: "Place updated successfully.", place })
     } catch (err) {
         next(err)
     }

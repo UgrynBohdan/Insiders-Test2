@@ -11,7 +11,10 @@ tripsRouter.get('/', authMiddleware, tripsController.getUserTrips)
 tripsRouter.get('/invite/accept', acceptInvite) // Прийняття запрошень
 tripsRouter.get('/:tripId', authMiddleware, tripsController.getDetails)
 
-tripsRouter.use('/:tripId/places', authMiddleware, placesRouter) // Доступ до місць
+tripsRouter.put('/:tripId', authMiddleware, tripsController.updateTrip)
+tripsRouter.delete('/:tripId', authMiddleware, tripsController.deleteTrip)
+
+tripsRouter.use('/:tripId/places', authMiddleware, placesRouter) // Доступ до place
 
 tripsRouter.post('/:tripId/access', authMiddleware, invite) // Запросити когось
 
