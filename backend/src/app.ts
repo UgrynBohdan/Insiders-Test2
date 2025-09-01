@@ -6,7 +6,6 @@ import loggerMiddleware from "./middlewares/logger"
 import authRouter from "./routes/auth.routes"
 import tripsRouter from './routes/trips.routes'
 import authMiddleware from './middlewares/auth'
-import placesRouter from './routes/places.routes'
 
 const app = express()
 app.use(express.json())
@@ -17,7 +16,7 @@ app.use(cors())
 app.use(loggerMiddleware)
 
 app.use('/api/auth', authRouter)
-app.use('/api/trips', authMiddleware, tripsRouter)
+app.use('/api/trips', tripsRouter)
 
 app.use(errorMiddleware.notFoundMiddleware)
 app.use(errorMiddleware.errorMiddleware)

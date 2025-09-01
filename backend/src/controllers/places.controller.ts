@@ -7,7 +7,7 @@ function hasRight (trip: ITrip, user: IUser) {
     // Перевіряємо, чи користувач є власником
     if (!trip.owner === user.id) {
         // Перевіряємо, чи користувач є учасником
-        const isParticipant = trip.collaborator.some(participantId => participantId === user.id)
+        const isParticipant = trip.collaborators.some(collaboratorId => collaboratorId === user.id)
         if (!isParticipant) {
             return false
         }
