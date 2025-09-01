@@ -27,9 +27,20 @@ export async function createNewTrip(req: Request, res: Response, next: NextFunct
 
 export async function getUserTrips(req: Request, res: Response, next: NextFunction) {
     try {
-        const userData = await User.findOne({ _id: (req as any).user.id }).populate('trips') as IUser
-        const trips = userData.trips
-        res.json({ trips })
+        // const userData = await User.findOne({ _id: (req as any).user.id }).populate('trips') as IUser
+        // const trips = userData.trips
+        // res.json({ trips })
+
+        const userId = (req as any).user.id
+
+        const allUserTrips = await Trip.find({
+            $or: [
+                { owner: userId },
+                { participants: { $in: [userId] } }
+            ]
+        })
+
+        res.json({ allUserTrips })
 
     } catch (err) {
         next(err)

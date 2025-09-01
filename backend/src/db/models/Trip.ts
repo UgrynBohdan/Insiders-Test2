@@ -6,6 +6,7 @@ export interface ITrip extends Document {
     startDate?: Date
     endDate?: Date
     owner: mongoose.Types.ObjectId
+    colorants: mongoose.Types.ObjectId[]
 }
 
 const TripSchema: Schema = new Schema({
@@ -13,7 +14,8 @@ const TripSchema: Schema = new Schema({
     description: { type: String },
     startDate: { type: Date },
     endDate: { type: Date },
-    owner: { type: Schema.Types.ObjectId, ref: 'User' }
+    owner: { type: Schema.Types.ObjectId, ref: 'User' },
+    colorants: [{ type: Schema.Types.ObjectId, ref: 'User' }]
 })
 
 export default mongoose.model<ITrip>("Trip", TripSchema)
