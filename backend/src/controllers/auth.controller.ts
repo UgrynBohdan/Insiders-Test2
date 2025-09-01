@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import bcrypt from 'bcrypt'
 import { connectDB } from '../db/db'
 import User from '../db/models/User'
@@ -7,38 +7,44 @@ import jwt from 'jsonwebtoken'
 
 const SECRET_KEY = process.env.SECRET_KEY as string
 
-export async function register(req: Request, res: Response) {
-    const { name, email, password } = req.body
+export async function register(req: Request, res: Response, next: NextFunction) {
+    try {
+        const { name, email, password } = req.body
 
-    await connectDB()
+        const existing = await User.findOne({ email });
+        if (existing) {
+            const err = new Error('User already exists') as CustomError
+            err.status = 400
+            throw err
+        }
 
-    const hash = await bcrypt.hash(password, 10)
+        const hash = await bcrypt.hash(password, 10)
+        const newUser = new User({ name, email, password: hash })
+        
+        await newUser.save()
 
-    const newUser = new User({ name, email, password: hash })
-    await newUser.save()
-    res.status(201).json(newUser)
+        res.status(201).json(newUser)
+    } catch (error) {
+        next(error)
+    }
 }
 
-export async function login(req: Request, res: Response) {
+export async function login(req: Request, res: Response, next: NextFunction) {
     const { email, password } = req.body
 
-    await connectDB()
-
-    const row = await User.find({ email })
-    const user = row[0]
+    const user = await User.findOne({ email })
     if (!user) {
-        const err = new Error() as CustomError
-        err.message = 'User is not found!'
+        const err = new Error('User not found') as CustomError
         err.status = 404
         throw err
     }
 
-    await bcrypt.compare(password, user.password).catch((e) => {
-        const err = new Error() as CustomError
-        err.message = 'Incorrect password!'
+    const isMatch = await bcrypt.compare(password, user.password)
+    if (!isMatch) {
+        const err = new Error('Incorrect password') as CustomError
         err.status = 401
         throw err
-    })
+    }
     
     const token = jwt.sign({ id: user._id, name: user.name, role: user.role }, SECRET_KEY, { expiresIn: '1h' });
 
