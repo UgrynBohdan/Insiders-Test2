@@ -1,13 +1,17 @@
 import { useAuth } from "@/hooks/useAuth"
-import { useTrips } from "@/hooks/useTrips" // твій код з отриманням подорожей
+import { useTrips } from "@/hooks/useTrips"
 import { useNavigate } from "react-router-dom"
 
 export const Home = () => {
     const { user, isLoading, error, isAuthenticated, logout } = useAuth()
     // const { data: trips, isLoading: isTripsLoading, error: tripsError } = useTrips()
 
-    const { data: trips, isLoading: isTripsLoading, error: tripsError } = {
-        data: [{title: 'dsdsd', id: 12, description: 'dsd'}, {title: '2', id: 2, description: '2'} ], isLoading: null, error: null
+    const { trips } = useTrips()
+    console.log(trips);
+    
+
+    const { isLoading: isTripsLoading, error: tripsError } = {
+        isLoading: null, error: null
     }
 
     const navigate = useNavigate()
@@ -42,7 +46,7 @@ export const Home = () => {
             <h2 className="text-2xl font-bold mb-4">Мої подорожі</h2>
             {trips?.length ? (
             trips.map((trip) => (
-                <div key={trip.id} className="p-4 bg-white rounded shadow">
+                <div key={trip._id} className="p-4 bg-white rounded shadow">
                 <h3 className="font-semibold">{trip.title}</h3>
                 <p>{trip.description}</p>
                 </div>

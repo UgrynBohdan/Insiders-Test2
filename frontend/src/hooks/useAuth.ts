@@ -16,11 +16,9 @@ export const useAuth = () => {
     // ✅ Мутація для виходу
     const logoutMutation = useMutation({
         mutationFn: logout,
-        onSuccess: async () => {
-            // Очищаємо ВЕСЬ кеш React Query
-            await queryClient.clear();
-            // Навігуємо на сторінку входу
-            navigate("/");
+        onSuccess: () => {
+            queryClient.clear()
+            navigate("/")
         },
     })
 

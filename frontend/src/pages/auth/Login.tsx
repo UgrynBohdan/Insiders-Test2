@@ -1,16 +1,18 @@
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { login, type LoginData } from "../../api/auth";
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
     const navigate = useNavigate()
     const [form, setForm] = useState<LoginData>({ email: "", password: "" });
+    const queryClient = useQueryClient()
 
     const mutation = useMutation({
         mutationFn: login,
         onSuccess: (data) => {
             console.log("Успішний логін:", data);
+            // await queryClient.invalidateQueries({ queryKey: ["currentUser"] })
             navigate('/')
         },
     });
