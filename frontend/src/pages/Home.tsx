@@ -4,6 +4,7 @@ import { useTrips } from "@/hooks/useTrips"
 import { useNavigate } from "react-router-dom"
 // import { CreateTripModal } from "./CreateTripModal"
 import { Link } from "react-router-dom"
+import NewTripForm from "@/components/NewTripForm"
 
 export const Home = () => {
     const { user, isLoading, isAuthenticated, logout } = useAuth()
@@ -90,6 +91,11 @@ export const Home = () => {
                         </button>
                     </div>
                 )}
+                {isModalOpen ?
+                    <NewTripForm setIsModalOpen={setIsModalOpen} />
+                :
+                    <></>
+                }
             </section>
         </div>
     )

@@ -54,7 +54,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
 export async function getUserStatus(req: Request, res: Response) {
     res.json({
         authenticated: true,
-        // user: (req as any).user, // дані з токена
+        user: (req as any).user, // дані з токена
     })
 }
 
