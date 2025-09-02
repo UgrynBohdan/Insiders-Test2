@@ -15,23 +15,23 @@ export interface RegisterData {
 }
 
 export async function login(data: LoginData) {
-    const res = await axios.post(`${API_URL}/login`, data)
-    const token = res.data.token
+    const res = await axios.post(`${API_URL}/login`, data, { withCredentials: true })
 
-    // зберігаємо токен у cookie
-    Cookies.set("token", token, { expires: 7 })
     return res.data
 }
 
 export async function register(data: RegisterData) {
-    const res = await axios.post(`${API_URL}/register`, data)
-    const token = res.data.token
-
-    // зберігаємо токен у cookie
-    Cookies.set("token", token, { expires: 7 })
+    const res = await axios.post(`${API_URL}/register`, data, { withCredentials: true })
+ 
     return res.data
 }
 
-export function logout() {
-    Cookies.remove("token")
+export async function getCurrentUser() {
+    const res = await axios.get(`${API_URL}/status`, { withCredentials: true })
+    return res.data
+}
+
+export async function logout() {
+    const res = await axios.post(`${API_URL}/logout`, { withCredentials: true })
+    return res.data
 }

@@ -50,3 +50,15 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     res.cookie('token', token, { httpOnly: true, secure: true, maxAge: 60 * 60 * 1000 })
     res.status(200).json({ message: 'Login senseful!' });
 }
+
+export async function getUserStatus(req: Request, res: Response) {
+    res.json({
+        authenticated: true,
+        user: (req as any).user, // дані з токена
+    })
+}
+
+export async function logout(req: Request, res: Response) {
+    res.clearCookie("token")
+    res.json({ message: "Logged out" })
+}
