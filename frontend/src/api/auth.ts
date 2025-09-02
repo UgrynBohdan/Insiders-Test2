@@ -1,4 +1,5 @@
 import axios from "axios"
+import Cookies from 'js-cookie'
 
 const API_URL = import.meta.env.VITE_API_URL + "/auth"
 
@@ -32,5 +33,9 @@ export async function getCurrentUser() {
 
 export async function logout() {
     const res = await axios.post(`${API_URL}/logout`, { withCredentials: true })
+    console.log(res.data)
+
+    Cookies.remove('token')
+
     return res.data
 }

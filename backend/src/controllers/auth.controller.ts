@@ -47,7 +47,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     
     const token = jwt.sign({ id: user._id, name: user.name, role: user.role }, JWT_SECRET, { expiresIn: '1h' });
 
-    res.cookie('token', token, { httpOnly: true, secure: true, maxAge: 60 * 60 * 1000 })
+    res.cookie('token', token, { httpOnly: false, secure: true, maxAge: 60 * 60 * 1000 })
     res.status(200).json({ message: 'Login senseful!' });
 }
 
@@ -59,6 +59,8 @@ export async function getUserStatus(req: Request, res: Response) {
 }
 
 export async function logout(req: Request, res: Response) {
+    // res.clearCookie("token")
+    // res.cookie('token2', '12', { httpOnly: true, secure: true, maxAge: 10 * 1000 })
     res.clearCookie("token")
-    res.json({ message: "Logged out" })
+    res.send({ message: "Logged out" })
 }
