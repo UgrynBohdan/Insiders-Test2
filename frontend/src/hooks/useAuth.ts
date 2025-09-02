@@ -10,17 +10,17 @@ export const useAuth = () => {
     const { data: user, isLoading, error } = useQuery({
         queryKey: ["currentUser"],
         queryFn: getCurrentUser,
-        retry: false, // не повторювати запит якщо 401
+        retry: false,
     })
 
     // ✅ Мутація для виходу
     const logoutMutation = useMutation({
         mutationFn: logout,
         onSuccess: async () => {
-        // Чистимо кеш користувача
-            await queryClient.invalidateQueries({ queryKey: ["currentUser"] })
-            queryClient.clear()
-            navigate("/login")
+            // Очищаємо ВЕСЬ кеш React Query
+            await queryClient.clear();
+            // Навігуємо на сторінку входу
+            navigate("/");
         },
     })
 
