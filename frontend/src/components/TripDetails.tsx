@@ -16,15 +16,19 @@ function TripDetails() {
     if (!tripId) return 
 
     const { trip, isLoading, isError, error, deleteTripM } = useTrip(tripId)
+
     if (isLoading) {
         return <div>Завантаження...</div>;
     }
     if (isError) {
-        return <div>Помилка: {(error as Error).message}</div>;
+        alert(error)
+        return (
+            <div className="flex items-center justify-center p-8 text-red-600 bg-red-100 rounded-md">
+                <p className="font-semibold">Помилка завантаження даних:</p>
+                <p>{(error as Error).message}</p>
+            </div>
+        );
     }
-
-    console.log(trip)
-    
         
 
     if (!trip) {

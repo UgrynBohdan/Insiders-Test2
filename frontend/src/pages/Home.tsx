@@ -2,13 +2,12 @@ import { useState } from "react"
 import { useAuth } from "@/hooks/useAuth"
 import { useTrips } from "@/hooks/useTrips"
 import { useNavigate } from "react-router-dom"
-// import { CreateTripModal } from "./CreateTripModal"
 import { Link } from "react-router-dom"
 import NewTripForm from "@/components/NewTripForm"
 
 export const Home = () => {
     const { user, isLoading, isAuthenticated, logout } = useAuth()
-    const { trips, isLoading: isTripsLoading, error: tripsError, refetchTrips } = useTrips()
+    const { trips, isLoading: isTripsLoading, error: tripsError } = useTrips()
     const navigate = useNavigate()
     const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -46,7 +45,7 @@ export const Home = () => {
     return (
         <div className="min-h-screen bg-gray-100 p-6 sm:p-8">
             <header className="flex justify-between items-center mb-8">
-                <h1 className="text-3xl sm:text-4xl font-bold text-gray-800">Привіт, {user?.name || "користувач"} 👋</h1>
+                <h1 className="text-3xl sm:text-4xl font-bold text-gray-800">Привіт, {user?.user.name || "користувач"} 👋</h1>
                 <button
                     onClick={logout}
                     className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors duration-200"

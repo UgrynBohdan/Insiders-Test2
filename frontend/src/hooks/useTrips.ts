@@ -21,12 +21,12 @@ export const useTrips = () => {
 }
 
 export const useTrip = (tripId: string) => {
-    const { data: trip, isLoading, isError, error } = useQuery({
+    const { data: trip, isLoading } = useQuery({
         queryKey: ["userTrips", tripId],
         queryFn: () => getTripDetails(tripId)
     })
 
-    const { mutate: deleteTripM } = useMutation({
+    const { mutate: deleteTripM, isError: isMutationError, error: mutationError } = useMutation({
         mutationFn: deleteTrip
     })
 
@@ -35,7 +35,7 @@ export const useTrip = (tripId: string) => {
     })
     
     return {
-        trip, isLoading, isError, error,
+        trip, isLoading, isError: isMutationError, error: mutationError,
         deleteTripM, inviteCollaborate
     }
 }

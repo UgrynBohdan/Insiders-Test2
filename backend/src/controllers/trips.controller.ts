@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import Trip from '../db/models/Trip'
+import Trip, { ITrip } from '../db/models/Trip'
 import User, { IUser } from '../db/models/User'
 
 export async function createNewTrip(req: Request, res: Response, next: NextFunction) {
@@ -72,6 +72,11 @@ export async function deleteTrip(req: Request, res: Response, next: NextFunction
             return
         }
 
+        if (trip.owner.toString() !== (req as any).user.id) {
+            res.status(404).json({ message: "You don't have enough rights" })
+            return
+        }
+
         // Видалення подорожі
         await Trip.findByIdAndDelete(tripId)
         
@@ -90,10 +95,16 @@ export async function deleteTrip(req: Request, res: Response, next: NextFunction
 export async function updateTrip(req: Request, res: Response, next: NextFunction) {
     try {
         const { tripId } = req.params
-        const trip = await Trip.findOne({ _id: tripId })        
+        const trip = await Trip.findOne({ _id: tripId })
 
         if (!trip) {
             res.status(404).json({ message: 'Trip not found!' })
+            return
+        }
+        
+
+        if (trip.owner.toString() !== (req as any).user.id) {
+            res.status(404).json({ message: "You don't have enough rights" })
             return
         }
 
