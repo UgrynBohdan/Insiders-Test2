@@ -20,6 +20,17 @@ export interface INewTrip {
     endDate: string
 }
 
+export interface INewPlace {
+    locationName: string
+    dayNumber: number
+    notes: string
+}
+
+export interface IPlacePostData {
+    tripId: string
+    data: INewPlace
+}
+
 export interface IAccessCollaborate {
     tripId: string
     invitedEmail: string
@@ -66,6 +77,19 @@ export async function deleteTrip(tripId: string) {
     }
 }
 
+// Place
+export async function postNewPlace(placePostData: IPlacePostData) {
+    try {
+        const { tripId, data } = placePostData
+        const res = await axios.post(`${API_URL}/${tripId}/places`, data, { withCredentials: true })
+        return res.data
+    } catch (err) {
+        console.error(err)
+        throw err
+    }
+}
+
+// Invite
 export async function accessCollaborate(payload: IAccessCollaborate) {
     try {
         const { tripId, invitedEmail } = payload

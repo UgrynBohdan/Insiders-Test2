@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import InviteFriendForm from "./InviteFriendForm";
 import { Button } from "./ui/button";
+import NewPlaceForm from "./NewPlaceForm";
 
 
 function TripDetails() {
@@ -10,6 +11,7 @@ function TripDetails() {
     const navigate = useNavigate()
 
     const [wantToInvite, setWantToInvite] = useState(false)
+    const [wantToAddPlace, setWantToAddPlace] = useState(false)
 
     if (!tripId) return 
 
@@ -20,6 +22,9 @@ function TripDetails() {
     if (isError) {
         return <div>Помилка: {(error as Error).message}</div>;
     }
+
+    console.log(trip)
+    
         
 
     if (!trip) {
@@ -49,18 +54,35 @@ function TripDetails() {
                 </p>
                 </div>
                 
-                <div className="mb-6">
-                <h3 className="text-xl font-semibold text-gray-700 mb-2">Учасники</h3>
-                <ul className="list-disc list-inside space-y-1 text-gray-700">
-                    {trip.collaborators.map((participant: any) => (
-                        <li key={participant._id}>{participant.name}</li>
-                    ))}
-                </ul>
+                <div className="mb-6 border">
+                    <h3 className="text-xl font-semibold text-gray-700 mb-2">Учасники</h3>
+                    <ul className="list-disc list-inside space-y-1 text-gray-700">
+                        {trip.collaborators.map((participant: any) => (
+                            <li key={participant._id}>{participant.name}</li>
+                        ))}
+                    </ul>
+                </div>
+
+                <div className="mb-6 border">
+                    <h3 className="text-xl font-semibold text-gray-700 mb-2">Місця для цієї подорожі</h3>
+                    {trip.places.length !== 0 ?
+                        <ul className="list-disc list-inside space-y-1 text-gray-700">
+                            {trip.places.slice().sort((a: any, b: any) => a.dayNumber - b.dayNumber).map((place: any) => (
+                                <li key={place._id}>День {place.dayNumber}: {place.locationName}</li>
+                            ))}
+                        </ul>
+                    :
+                        <p>Місця відсутні</p>
+                    }
+                    {wantToAddPlace ?
+                        <NewPlaceForm tripId={tripId} setWantToAddPlace={setWantToAddPlace} />
+                    :
+                        <Button className="mt-4" onClick={() => setWantToAddPlace(true)}>Додати місце для подорожі</Button>
+                    }
                 </div>
                 
                 <div className="flex justify-between space-y-4">
                 <Button variant='destructive'
-                    // className="flex items-center justify-center px-4 py-2 text-sm font-semibold text-white bg-red-600 rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200"
                     onClick={() => {
                         deleteTripM(tripId)
                         navigate(-1)
@@ -82,7 +104,6 @@ function TripDetails() {
                 </Button>
 
                 <Button
-                    // className="flex items-center justify-center px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"    
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -96,7 +117,6 @@ function TripDetails() {
                     </svg>
                     Редагувати
                 </Button>
-                <Button>dsdsd</Button>
                 </div>
 
                 {wantToInvite ?
@@ -104,7 +124,6 @@ function TripDetails() {
                 :
                     <Button
                         onClick={() => setWantToInvite(true)}
-                        // className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                     >
                         Запостити друга в подорож
                     </Button>
@@ -112,7 +131,6 @@ function TripDetails() {
             <div>
                 <Button className="mt-4"
                     onClick={() => window.history.back()}
-                    // className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
                     Назад
                 </Button>

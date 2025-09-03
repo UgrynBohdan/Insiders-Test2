@@ -106,4 +106,4 @@ const NewTripForm = ({ setIsModalOpen }: any) => {
   );
 };
 
-export default NewTripForm;
+export default NewTripForm

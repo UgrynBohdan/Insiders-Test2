@@ -5,9 +5,10 @@ import { IUser } from "../db/models/User"
 
 function hasRight (trip: ITrip, user: IUser) {
     // Перевіряємо, чи користувач є власником
-    if (!(trip.owner === user.id)) {
+    if (!(trip.owner.toString() === user.id)) {
+        
         // Перевіряємо, чи користувач є учасником
-        const isParticipant = trip.collaborators.some(collaboratorId => collaboratorId === user.id)
+        const isParticipant = trip.collaborators.some(collaboratorId => collaboratorId.toString() === user.id)
         if (!isParticipant) {
             return false
         }
