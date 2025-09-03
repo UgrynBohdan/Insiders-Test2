@@ -49,8 +49,6 @@ export async function postNewTrip(data: INewTrip) {
 export async function getTripDetails(tripId: string) {
     try {
         const res = await axios.get(`${API_URL}/${tripId}`, { withCredentials: true })
-        console.log(res.data.tripInfo)
-        
         return res.data.tripInfo
     } catch (err) {
         console.error(err)

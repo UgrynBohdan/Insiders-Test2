@@ -54,7 +54,8 @@ export async function getDetails(req: Request, res: Response, next: NextFunction
         }
         
         const tripInfo = await trip.populate('places')
-        res.json({ tripInfo })
+        const tripInfoW = await trip.populate('collaborators')
+        res.json({ tripInfo, tripInfoW })
 
     } catch (err) {
         next(err)

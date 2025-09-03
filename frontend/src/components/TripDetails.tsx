@@ -19,7 +19,6 @@ function TripDetails() {
     if (isError) {
         return <div>Помилка: {(error as Error).message}</div>;
     }
-    
 
     if (!trip) {
         return (
@@ -52,7 +51,7 @@ function TripDetails() {
                 <h3 className="text-xl font-semibold text-gray-700 mb-2">Учасники</h3>
                 <ul className="list-disc list-inside space-y-1 text-gray-700">
                     {trip.collaborators.map((participant: any) => (
-                        <li key={participant}>{participant}</li>
+                        <li key={participant._id}>{participant.name}</li>
                     ))}
                 </ul>
                 </div>
