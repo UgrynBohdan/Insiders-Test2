@@ -2,6 +2,7 @@ import { useTrip } from "@/hooks/useTrips";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import InviteFriendForm from "./InviteFriendForm";
+import { Button } from "./ui/button";
 
 
 function TripDetails() {
@@ -19,6 +20,7 @@ function TripDetails() {
     if (isError) {
         return <div>Помилка: {(error as Error).message}</div>;
     }
+        
 
     if (!trip) {
         return (
@@ -29,7 +31,7 @@ function TripDetails() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-100 p-8 flex items-center justify-center">
+        <div className="min-h-screen bg-gray-100 p-8 flex items-center justify-center grid place-items-center">
             <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
                 
                 <h1 className="text-4xl font-bold text-gray-800 mb-4">{trip.title}</h1>
@@ -56,9 +58,9 @@ function TripDetails() {
                 </ul>
                 </div>
                 
-                <div className="flex justify-between">
-                <button
-                    className="flex items-center justify-center px-4 py-2 text-sm font-semibold text-white bg-red-600 rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200"
+                <div className="flex justify-between space-y-4">
+                <Button variant='destructive'
+                    // className="flex items-center justify-center px-4 py-2 text-sm font-semibold text-white bg-red-600 rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200"
                     onClick={() => {
                         deleteTripM(tripId)
                         navigate(-1)
@@ -77,11 +79,11 @@ function TripDetails() {
                         />
                     </svg>
                     Видалити
-                </button>
+                </Button>
 
-                <button
-                    className="flex items-center justify-center px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
-                    >
+                <Button
+                    // className="flex items-center justify-center px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"    
+                >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-5 w-5 mr-2"
@@ -93,27 +95,27 @@ function TripDetails() {
                         />
                     </svg>
                     Редагувати
-                </button>
+                </Button>
+                <Button>dsdsd</Button>
                 </div>
 
                 {wantToInvite ?
                     <InviteFriendForm tripId={tripId} setWantToInvite={setWantToInvite} />
                 :
-                    <button
+                    <Button
                         onClick={() => setWantToInvite(true)}
-                        className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        // className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                     >
                         Запостити друга в подорож
-                    </button>
+                    </Button>
                 }
-
-            <div className="text-center">
-                <button
+            <div>
+                <Button className="mt-4"
                     onClick={() => window.history.back()}
-                    className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    // className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
                     Назад
-                </button>
+                </Button>
             </div>
         </div>
         </div>

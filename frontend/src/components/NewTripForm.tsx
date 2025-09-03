@@ -1,6 +1,6 @@
 import { postNewTrip, type INewTrip } from '@/api/trip';
 import { useMutation } from '@tanstack/react-query';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const NewTripForm = ({ setIsModalOpen }: any) => {
   const [formData, setFormData] = useState<INewTrip>({
